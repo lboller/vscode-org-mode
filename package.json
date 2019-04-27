@@ -23,7 +23,7 @@
         "Languages"
     ],
     "activationEvents": [
-        "onLanguage:org"
+        "onLanguage:markdown"
     ],
     "main": "./out/src/extension",
     "contributes": {
@@ -184,12 +184,12 @@
             },
             {
                 "command": "org.promoteSubtree",
-                "key": "ctrl+alt+o p",
+                "key": "ctrl+alt+[",
                 "when": "editorLangId == 'markdown'"
             },
             {
                 "command": "org.demoteSubtree",
-                "key": "ctrl+alt+o d",
+                "key": "ctrl+alt+]",
                 "when": "editorLangId == 'markdown'"
             },
             {

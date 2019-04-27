@@ -15,7 +15,7 @@ export function getLine(document: vscode.TextDocument, lineNum: vscode.Position)
 }
 
 export function getHeaderPrefix(line: string) {
-    const prefix = line.match(/^\*+\s/);
+    const prefix = line.match(/^\#+\s/);
     if (prefix) {
         return prefix[0].trim();
     }
@@ -34,7 +34,7 @@ export function getHeaderTitle(line: string): string {
 }
 
 export function getPrefix(line: string) {
-    const prefix = line.match(/^\*+|^-\s|^\d+\./);
+    const prefix = line.match(/^\#+|^-\s|^\d+\./);
     if (prefix) {
         return prefix[0].trim();
     }
@@ -60,7 +60,7 @@ export function findParentPrefix(document: vscode.TextDocument, pos: vscode.Posi
 export function findBeginningOfSectionWithHeader(document: vscode.TextDocument, pos: vscode.Position, levelSym: string = "") {
     const beginningOfSection = findBeginningOfSection(document, pos, levelSym);
     const prevLineNum = beginningOfSection.line - 1;
-    if (prevLineNum >= 0 && document.lineAt(prevLineNum).text.match(/^\*+\s/)) {
+    if (prevLineNum >= 0 && document.lineAt(prevLineNum).text.match(/^\#+\s/)) {
         return new vscode.Position(prevLineNum, 0);
     }
     return beginningOfSection;
@@ -113,9 +113,9 @@ export function findEndOfContent(document: vscode.TextDocument, pos: vscode.Posi
         return new vscode.Position(pos.line, getLine(document, pos).length);
     }
     let sectionRegex = getSectionRegex(levelSym);
-    if (levelSym.startsWith("*")) {      // add an extra star so that content stops at next header of same level
+    if (levelSym.startsWith("#")) {      // add an extra star so that content stops at next header of same level
         const numStars = getStarPrefixCount(levelSym) + 1;
-        sectionRegex = new RegExp(`\\*{${numStars},}`);
+        sectionRegex = new RegExp(`\\#{${numStars},}`);
     }
 
     let curLine = pos.line;
@@ -150,9 +150,9 @@ export function getSectionRegex(prefix: string) {
     else if (prefix === "-") {
         regex = /^-\s$/;
     }
-    else if (prefix.startsWith("*")) {                          // starting on header line
+    else if (prefix.startsWith("#")) {                          // starting on header line
         const numStars = getStarPrefixCount(prefix);
-        regex = new RegExp(`\\*{${numStars},}`);
+        regex = new RegExp(`\\#{${numStars},}`);
     }
 
     return regex;
@@ -169,7 +169,7 @@ export function getSectionRegex(prefix: string) {
  */
 export function getStarPrefixCount(prefix: string) {
     let currentLevel = -1;
-    while (prefix[++currentLevel] === '*') { ; }
+    while (prefix[++currentLevel] === '#') { ; }
     return currentLevel;
 }
 
@@ -246,7 +246,7 @@ export function getUniq(arr: string[]): string[] {
  * @return true if the specified line is a block end, false otherwise.
  */
 export function isBlockEndLine(line: string): boolean {
-    return /^\s*#\+END(_|:)/i.test(line);
+    return /^\s##\+END(_|:)/i.test(line);
 }
 
 /**
@@ -255,7 +255,7 @@ export function isBlockEndLine(line: string): boolean {
  * @return true if the specified line is a block, false otherwise.
  */
 export function isBlockStartLine(line: string): boolean {
-    return /^\s*#\+BEGIN(_|:)/i.test(line);
+    return /^\s##\+BEGIN(_|:)/i.test(line);
 }
 
 /**
@@ -264,5 +264,5 @@ export function isBlockStartLine(line: string): boolean {
  * @return true if the specified line is a header, false otherwise.
  */
 export function isHeaderLine(line: string): boolean {
-    return /^\*+ /.test(line);
+    return /^\#+ /.test(line);
 }

@@ -10,7 +10,7 @@ export function promoteSubtree(textEditor: vscode.TextEditor, edit: vscode.TextE
     const endOfContent = Utils.findEndOfContent(document, cursorPos, headerPrefix);
 
     if(headerPrefix) {
-        for(let i = cursorPos.line; i < endOfContent.line + 1; ++i) {
+        for(let i = cursorPos.line; i < endOfContent.line; ++i) {
             const curlineStart = new vscode.Position(i, 0);
             const lineHeaderPrefix = Utils.getHeaderPrefix(Utils.getLine(document, curlineStart));
             if(lineHeaderPrefix) {
@@ -31,10 +31,10 @@ export function demoteSubtree(textEditor: vscode.TextEditor, edit: vscode.TextEd
     const endOfContent = Utils.findEndOfContent(document, cursorPos, headerPrefix);
 
     if(headerPrefix) {
-        for(let i = cursorPos.line; i < endOfContent.line + 1; ++i) {
+        for(let i = cursorPos.line; i < endOfContent.line; ++i) {
             const curlineStart = new vscode.Position(i, 0);
             if(Utils.getHeaderPrefix(Utils.getLine(document, curlineStart))) {
-                edit.insert(curlineStart, "*");
+                edit.insert(curlineStart, "#");
             }
         }
     }

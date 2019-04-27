@@ -15,7 +15,7 @@ export function insertHeadingRespectContent(textEditor: vscode.TextEditor, edit:
             sibling = headerPrefix;
             insertPos = Utils.findEndOfContent(document, cursorPos, sibling);
         } else {
-            const parentHeader = Utils.findParentPrefix(document, cursorPos) || "*";
+            const parentHeader = Utils.findParentPrefix(document, cursorPos) || "#";
             sibling = parentHeader;
             insertPos = Utils.findEndOfContent(document, cursorPos, Utils.getPrefix(curLine));
         }
@@ -36,7 +36,7 @@ export function insertChild(textEditor: vscode.TextEditor, edit: vscode.TextEdit
     const insertPos = new vscode.Position(cursorPos.line, endOfLine);
 
     if(headerPrefix) {
-        edit.insert(insertPos, "\n" + headerPrefix.trim() + "* ");
+        edit.insert(insertPos, "\n" + headerPrefix.trim() + "# ");
         Utils.moveToEndOfLine(textEditor, new vscode.Position(insertPos.line, 0));
         textEditor.revealRange(new vscode.Range(insertPos, insertPos));     // jump screen so cursor is in view
     }
@@ -49,7 +49,7 @@ export function demoteLine(textEditor: vscode.TextEditor, edit: vscode.TextEdito
     const headerPrefix = Utils.getHeaderPrefix(curLine);
     const insertPos = new vscode.Position(cursorPos.line, 0);
     if(headerPrefix) {
-        edit.insert(insertPos, "*");
+        edit.insert(insertPos, "#");
     }
 }
 
@@ -60,7 +60,7 @@ export function promoteLine(textEditor: vscode.TextEditor, edit: vscode.TextEdit
     const headerPrefix = Utils.getHeaderPrefix(curLine);
     const insertPos = new vscode.Position(cursorPos.line, 0);
 
-    if(headerPrefix && headerPrefix !== "* ") {
+    if(headerPrefix && headerPrefix !== "# ") {
         const deleteRange = new vscode.Range(insertPos, new vscode.Position(insertPos.line, 1));
         edit.delete(deleteRange);
     }
